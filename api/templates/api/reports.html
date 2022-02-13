@@ -1,0 +1,71 @@
+{% extends "api/base.html" %}
+{% load static %}
+{% block content %}
+      <!-- Right side column. Contains the navbar and content of the page -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            Reports
+            <small>Control panel</small>
+          </h1>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Reports</li>
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+          <!-- Main row -->
+          <div class="row">
+            <!-- Left col -->
+            <section class="col-lg-12 connectedSortable">
+
+
+              <!-- TO DO List -->
+              <div class="box box-primary">
+                <div class="box-header">
+                  <i class="ion ion-clipboard"></i>
+                  <h3 class="box-title">Reports</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <ul class="todo-list">
+                    {% for report in reports %}  
+                    <li>
+                      <!-- drag handle -->
+                      <span class="handle">
+                        <i class="fa fa-ellipsis-v"></i>
+                        <i class="fa fa-ellipsis-v"></i>
+                      </span>
+
+                      <!-- todo text -->
+                      <span class="text">{{report.content}}</span>
+                      <!-- Emphasis label -->
+                      <small class="label label-danger"><i class="fa fa-clock-o"></i>{{report.created|timesince}} ago</small>
+                      <!-- General tools such as edit or delete-->
+                      <div class="tools">
+                        <a href="{% url 'reportDetails' report.id %}"><i class="fa fa-edit"></i></a>
+                        
+                      </div>
+                    </li>
+                    {% endfor %}
+
+                  </ul>
+                </div><!-- /.box-body -->
+                <div class="box-footer clearfix no-border">
+                    <button class="btn btn-default pull-right"><i class="fa fa-plus"></i> View More</button>
+                </div>
+              </div><!-- /.box -->
+
+
+            </section><!-- /.Left col -->
+            <!-- right col (We are only adding the ID to make the widgets sortable)-->
+
+          </div><!-- /.row (main row) -->
+
+        </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+
+{% endblock content %}

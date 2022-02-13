@@ -1,0 +1,23 @@
+
+.navbar{
+    border: 1px solid white;
+    display: block; 
+    box-shadow: 7px 7px 5px #aaaaaa;
+
+
+    
+    
+    
+}
+
+.navbar img{
+    height: 50px;
+    width: 50px;
+    padding-left: 1%;
+    float: left;
+    padding-right: 15px;
+}
+
+.navbar h1{
+    color: red;
+}
