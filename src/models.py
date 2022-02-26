@@ -32,8 +32,8 @@ class Report(models.Model):
     image3 = models.ImageField(null=True, upload_to='images')
     audio = models.FileField(null=True, upload_to='audios')
     video = models.FileField(null=True, upload_to='videos')
-    latitude = models.DecimalField(max_digits=20, decimal_places=20, null=True)
-    longitude = models.DecimalField(max_digits=20, decimal_places=20, null=True)
+    latitude = models.DecimalField(max_digits=25, decimal_places=20, null=True)
+    longitude = models.DecimalField(max_digits=25, decimal_places=20, null=True)
     created = models.DateTimeField(auto_now_add=True)
     resolved = models.BooleanField(default=False)
 
@@ -52,3 +52,20 @@ class Official(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+
+class Notification(models.Model):
+    department = models.CharField(max_length=1000)
+    state = models.CharField(max_length=200)
+    lga = models.CharField(max_length=200)
+    title = models.CharField(max_length=1000)
+    image = models.ImageField(upload_to='images')
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ('-created',)

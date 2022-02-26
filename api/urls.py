@@ -14,6 +14,8 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('loginPage/', views.loginPage, name='loginPage'),
     path('reports/', views.reports, name='reports'),
+    path('api-notificationsView/', views.NotificationView.as_view()),
+    path('api-notificationsCreate/', views.NotificationCreate.as_view()),
     path('reportDetails/<str:pk>/', views.reportDetails, name='reportDetails'),
 
 ]

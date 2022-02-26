@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from src.models import User, Report, Official
+from src.models import User, Report, Official, Notification
 from rest_framework import generics
-from api.serializers import UserSerializer, ReportSerializer, UserProfileSerializer, UserProfileUpdateSerializer, ReportHistorySerializer
+from api.serializers import UserSerializer, ReportSerializer, UserProfileSerializer, UserProfileUpdateSerializer, ReportHistorySerializer, NotificationViewSerializer, NotificationCreateSerializer
 from rest_framework import permissions
 from api.permissions import IsOwnerOrReadOnly
 from rest_framework import viewsets
@@ -51,6 +51,29 @@ class ReportViewSet(viewsets.ModelViewSet):
     queryset = Report.objects.all()
     permission_class = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     serializer_class = ReportHistorySerializer
+
+
+
+class NotificationView(generics.ListAPIView):
+    serializer_class = NotificationViewSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Notification.objects.all()
+        user = self.request.user.email
+        state = self.request.user.state
+        lga = self.request.user.lga
+        data= Notification.objects.filter(state=state, lga=lga)
+        return (data)
+
+
+class NotificationCreate(generics.CreateAPIView):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationCreateSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+
 
 
 def loginPage(request):

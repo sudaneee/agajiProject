@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from src.models import User, Report
+from src.models import User, Report, Notification
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -103,4 +103,34 @@ class ReportHistorySerializer(serializers.HyperlinkedModelSerializer):
             'longitude',
             'created',
             'resolved',
+        ]
+
+
+class NotificationViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = (
+            'id',
+            'department',
+            'state',
+            'lga',
+            'title',
+            'image',
+            'body',
+            'created',
+
+        )
+
+
+class NotificationCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = [
+            'department',
+            'state',
+            'lga',
+            'title',
+            'image',
+            'body',
+            'created',
         ]
