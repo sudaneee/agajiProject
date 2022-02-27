@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import json
 import requests
+from django_filters.rest_framework import DjangoFilterBackend
 
 class UserCreate(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -55,16 +56,13 @@ class ReportViewSet(viewsets.ModelViewSet):
 
 
 class NotificationView(generics.ListAPIView):
+    queryset = Notification.objects.all()
     serializer_class = NotificationViewSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['state', 'lga']
 
-    def get_queryset(self):
-        queryset = Notification.objects.all()
-        user = self.request.user.email
-        state = self.request.user.state
-        lga = self.request.user.lga
-        data= Notification.objects.filter(state=state, lga=lga)
-        return (data)
+
 
 
 class NotificationCreate(generics.CreateAPIView):

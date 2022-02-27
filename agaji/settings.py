@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'api',
     'rest_framework',
     'channels',
+    'django_filters',
 ]
 
 AUTH_USER_MODEL = 'src.User'

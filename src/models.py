@@ -69,3 +69,11 @@ class Notification(models.Model):
 
     class Meta:
         ordering = ('-created',)
+
+
+class Contact(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    contact_person = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.contact_person

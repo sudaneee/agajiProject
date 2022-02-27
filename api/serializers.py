@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from src.models import User, Report, Notification
+from django_filters.rest_framework import DjangoFilterBackend
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
