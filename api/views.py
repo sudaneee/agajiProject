@@ -1,7 +1,17 @@
 from django.shortcuts import render, redirect
-from src.models import User, Report, Official, Notification
+from src.models import User, Report, Official, Notification, Contact
 from rest_framework import generics
-from api.serializers import UserSerializer, ReportSerializer, UserProfileSerializer, UserProfileUpdateSerializer, ReportHistorySerializer, NotificationViewSerializer, NotificationCreateSerializer
+from api.serializers import (
+    UserSerializer, 
+    ReportSerializer, 
+    UserProfileSerializer, 
+    UserProfileUpdateSerializer, 
+    ReportHistorySerializer, 
+    NotificationViewSerializer, 
+    NotificationCreateSerializer,
+    ContactCreateSerializer,
+    ContactViewSerializer,
+)
 from rest_framework import permissions
 from api.permissions import IsOwnerOrReadOnly
 from rest_framework import viewsets
@@ -29,7 +39,22 @@ class ReportCreate(generics.CreateAPIView):
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
     permission_classes = [permissions.IsAuthenticated]
+    
 
+class ContactCreate(generics.CreateAPIView):
+    queryset = Contact.objects.all()
+    serializer_class = ContactCreateSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ContactView(generics.ListAPIView):
+    serializer_class = ContactViewSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Contact.objects.all()
+        user = self.request.user.id
+        data= Contact.objects.filter(user=user)
+        return (data)
 
 class UserProfile(generics.ListAPIView):
     serializer_class = UserProfileSerializer

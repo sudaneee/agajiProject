@@ -8,7 +8,9 @@ router.register(r'api-history', views.ReportViewSet)
 urlpatterns = [
     path('api-register', views.UserCreate.as_view()),
     path('api-report', views.ReportCreate.as_view()),
+    path('api-contactCreate', views.ContactCreate.as_view()),
     path('api-userprofile/', views.UserProfile.as_view()),
+    path('api-contactView/', views.ContactView.as_view()),
     path('api-userprofileupdate/<int:pk>/', views.UserProfileUpdate.as_view()),
     path('', include(router.urls)),
     path('dashboard/', views.dashboard, name='dashboard'),

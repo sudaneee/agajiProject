@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from src.models import User, Report, Notification
+from src.models import User, Report, Notification, Contact
 from django_filters.rest_framework import DjangoFilterBackend
 
 class UserSerializer(serializers.ModelSerializer):
@@ -135,3 +135,21 @@ class NotificationCreateSerializer(serializers.ModelSerializer):
             'body',
             'created',
         ]
+
+
+
+class ContactCreateSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    class Meta:
+        model = Contact
+        fields = ['user', 'contact_person']
+
+
+class ContactViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = (
+            'id',
+            'contact_person',
+    
+        )
