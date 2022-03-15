@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from src.models import User, Report, Notification, Contact
+from src.models import User, Report, Notification, Contact, SafeTripReport
 from django_filters.rest_framework import DjangoFilterBackend
 
-class UserSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'email',
+            'username',
             'password',
         )
         extra_kwargs = {'password': {'write_only': True}}
@@ -18,6 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
 
 
 class ReportSerializer(serializers.ModelSerializer):
@@ -55,7 +56,6 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'email',
-            'username',
             'ninNo',
             'name',
             'phoneNo',
@@ -70,7 +70,6 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         #return self.update(request, *args, **kwargs)
-        instance.username = validated_data['username']
         instance.ninNo = validated_data['ninNo']
         instance.name = validated_data['name']
         instance.phoneNo = validated_data['phoneNo']
@@ -153,3 +152,10 @@ class ContactViewSerializer(serializers.ModelSerializer):
             'contact_person',
     
         )
+
+
+class SafeTripCreateSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    class Meta:
+        model = SafeTripReport
+        fields = ['user', 'receiver', 'latitude', 'longitude']

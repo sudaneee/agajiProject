@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-from src.models import User, Report, Official, Notification, Contact
+from src.models import User, Report, Official, Notification, Contact, SafeTripReport
 from rest_framework import generics
 from api.serializers import (
-    UserSerializer, 
+    RegisterSerializer, 
     ReportSerializer, 
     UserProfileSerializer, 
     UserProfileUpdateSerializer, 
@@ -11,8 +11,9 @@ from api.serializers import (
     NotificationCreateSerializer,
     ContactCreateSerializer,
     ContactViewSerializer,
+    SafeTripCreateSerializer,
 )
-from rest_framework import permissions
+from rest_framework import permissions, generics
 from api.permissions import IsOwnerOrReadOnly
 from rest_framework import viewsets
 from rest_framework import serializers
@@ -27,12 +28,33 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import json
 import requests
+from knox.models import AuthToken
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from knox.views import LoginView as KnoxLoginView
 
-class UserCreate(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = ()
+class UserCreate(generics.GenericAPIView):
+    serializer_class = RegisterSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response({
+            "user": UserProfileSerializer(user, context=self.get_serializer_context()).data,
+            "token": AuthToken.objects.create(user)[1]
+        })
+
+
+class LoginAPI(KnoxLoginView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = AuthTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return super(LoginAPI, self).post(request, format=None)
 
 
 class ReportCreate(generics.CreateAPIView):
@@ -94,6 +116,14 @@ class NotificationCreate(generics.CreateAPIView):
     queryset = Notification.objects.all()
     serializer_class = NotificationCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class SafeTripCreate(generics.CreateAPIView):
+    queryset = SafeTripReport.objects.all()
+    serializer_class = SafeTripCreateSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
 
 
 
@@ -173,3 +203,5 @@ def reportDetails(request, pk):
         "report": report
     }
     return render(request, 'api/report_details.html', context)
+
+

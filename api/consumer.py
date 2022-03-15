@@ -42,3 +42,41 @@ class Reports(AsyncWebsocketConsumer):
         }
         final_result = json.dumps(context)
         await self.send(final_result)
+
+
+class SafeTrip(AsyncWebsocketConsumer):
+
+    async def connect(self):
+        self.group_name='safeTrip'
+        await self.channel_layer.group_add(
+            self.group_name,
+            self.channel_name
+        )
+
+        await self.accept()
+    
+    async def disconnect(self,close_code):
+        pass
+
+    async def receive(self,text_data):
+        # print (text_data)
+        await self.channel_layer.group_send(
+            self.group_name,
+            {
+                'type':'randomFunction',
+                'value':text_data,
+            }
+        )
+
+    async def randomFunction(self,event):
+        returned = event['value']
+        returnedObject = json.loads(returned)
+        latitude = returnedObject['latitude']
+        longitude = returnedObject['longitude']
+
+        context = {
+            "latitude": latitude,
+            "longitude": longitude
+        }
+        final_result = json.dumps(context)
+        await self.send(final_result)

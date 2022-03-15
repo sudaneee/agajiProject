@@ -5,6 +5,8 @@ from api import consumer
 
 ws_pattern= [
     path('ws/reports/',consumer.Reports.as_asgi()),
+    path('ws/safetrip/',consumer.SafeTrip.as_asgi()),
+
 ]
 
 application= ProtocolTypeRouter(

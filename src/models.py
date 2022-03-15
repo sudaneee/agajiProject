@@ -1,11 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+
+
 
 class User(AbstractUser):
     email = models.EmailField(null=True, unique=True)
     username = models.CharField(null=True, max_length=200, unique=True)
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username',]
     ninNo = models.IntegerField(null=True)
     name = models.CharField(max_length=200, null=True)
     phoneNo = models.IntegerField(null=True)
@@ -19,19 +23,18 @@ class User(AbstractUser):
     volunteerStatus = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.email
-
+        return str(self.username)
 
 
 class Report(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.CharField(max_length=500)
     content = models.TextField(null=True)
-    image1 = models.ImageField(null=True, upload_to='images')
-    image2 = models.ImageField(null=True, upload_to='images')
-    image3 = models.ImageField(null=True, upload_to='images')
-    audio = models.FileField(null=True, upload_to='audios')
-    video = models.FileField(null=True, upload_to='videos')
+    image1 = models.CharField(max_length=500, default=" ")
+    image2 = models.CharField(max_length=500, default=" ")
+    image3 = models.CharField(max_length=500, default=" ")
+    audio = models.CharField(max_length=500, default=" ")
+    video = models.CharField(max_length=500, default=" ")
     latitude = models.DecimalField(max_digits=25, decimal_places=20, null=True)
     longitude = models.DecimalField(max_digits=25, decimal_places=20, null=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -77,3 +80,13 @@ class Contact(models.Model):
 
     def __str__(self):
         return self.contact_person
+
+
+class SafeTripReport(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    receiver = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    latitude = models.DecimalField(max_digits=25, decimal_places=20, null=True)
+    longitude = models.DecimalField(max_digits=25, decimal_places=20, null=True)
+
+    def __str__(self):
+        return self.user

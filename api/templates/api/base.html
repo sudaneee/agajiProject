@@ -217,15 +217,6 @@
 
 
     <script>
-      document.querySelectorAll('.bahon-hoto img').forEach(hoto =>{
-        hoto.onclick = () => {
-          document.querySelector('.popup-hoto').style.display = 'block';
-          document.querySelector('.popup-hoto img').src = hoto.getAttribute('src');
-        } 
-      });
-      document.querySelector('.popup-hoto span').onclick = () => {
-        document.querySelector('.popup-hoto').style.display = 'none';
-      }
       var exampleSocket = new WebSocket("ws://localhost:8000/ws/reports/");
       exampleSocket.onmessage = function (event) {
         var area = document.getElementById("area").value;
@@ -241,6 +232,17 @@
           
         }
       }
+      
+      document.querySelectorAll('.bahon-hoto img').forEach(hoto =>{
+        hoto.onclick = () => {
+          document.querySelector('.popup-hoto').style.display = 'block';
+          document.querySelector('.popup-hoto img').src = hoto.getAttribute('src');
+        } 
+      });
+      document.querySelector('.popup-hoto span').onclick = () => {
+        document.querySelector('.popup-hoto').style.display = 'none';
+      }
+
       
     </script>
 
